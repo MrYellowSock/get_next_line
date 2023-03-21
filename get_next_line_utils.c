@@ -1,4 +1,6 @@
 #include "get_next_line.h"
+#include <stdlib.h>
+
 void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
 	char		*d;
@@ -68,4 +70,30 @@ char	*ft_strchr(const char *s, int c)
 		i++;
 	}
 	return (NULL);
+}
+
+// split only the first occurence of sep
+char	**ft_split_half(char const *s, char sep)
+{
+	char	**output;
+	char	*break_point;
+	int		left_size;
+	int		right_size;
+
+	break_point = ft_strchr(s, sep);
+	if (!break_point)
+		return (NULL);
+	output = malloc(sizeof(char *) * 2);
+	if (!output)
+		return (NULL);
+	left_size = break_point - s + 1;
+	right_size = ft_strlen(s) - left_size;
+	output[0] = malloc(left_size + 1);
+	output[1] = malloc(right_size + 1);
+	if (!output[0] && !output[1])
+		return (NULL);
+	output[0][left_size] = 0;
+	ft_memcpy(output[0], s, left_size);
+	ft_memcpy(output[1], s + left_size, right_size);
+	return (output);
 }

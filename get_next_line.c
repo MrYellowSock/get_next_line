@@ -1,15 +1,16 @@
 #include "get_next_line.h"
+#include <stdio.h>
 #include <stdlib.h>
-#include <sys/_types/_ssize_t.h>
 #include <unistd.h>
 
-char	*expand(char *target, char const *addition)
+void	expand(char **target, char const *addition)
 {
 	char	*newone;
 
-	newone = ft_strjoin(target, addition);
-	free(target);
-	return (newone);
+	newone = ft_strjoin(*target, addition);
+	if (*target)
+		free(*target);
+	*target = newone;
 }
 
 // a new string from fd
@@ -22,7 +23,7 @@ char	*get_next_string(int fd)
 	if (!read_buf)
 		return (NULL);
 	totalRead = read(fd, read_buf, BUFFER_SIZE);
-	if (totalRead < 0)
+	if (totalRead <= 0)
 	{
 		free(read_buf);
 		return (NULL);
@@ -35,18 +36,30 @@ char	*get_next_line(int fd)
 {
 	static char	*content_buffer;
 	char		*next_end;
-	char		*start;
+	char		**splits;
+	char		*recent;
 
 	//initialize
 	if (content_buffer == NULL)
-	{
 		content_buffer = malloc(0);
-	}
 	// newline exists in buffer : reuse them
 	next_end = ft_strchr(content_buffer, '\n');
 	if (next_end != NULL)
 	{
-
+		splits = ft_split_half(content_buffer, '\n');
+		free(content_buffer);
+		if (!splits)
+			return (NULL);
+		content_buffer = splits[1];
+		return (splits[0]);
 	}
-	return (content_buffer);
+	else
+	{
+		recent = get_next_string(fd);
+		expand(&content_buffer, recent);
+		if (!content_buffer)
+			return (NULL);
+		else
+			return (get_next_line(fd));
+	}
 }

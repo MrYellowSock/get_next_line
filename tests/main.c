@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
-#include "get_next_line.h"
+#include "../get_next_line.h"
 #include <stdio.h>
 #include <fcntl.h>
 #define LEN 1
@@ -9,7 +9,7 @@ int main()
 {
 	char *str;
 	char files[LEN][30] = {
-		"file.txt"
+		"tests/file.txt"
 	};
 	int fds[LEN];
 	for(int i=0;i<LEN;i++)
@@ -22,12 +22,14 @@ int main()
 		}
 	}
 	//read keep track of file offset position for us
-	for(int i=0;i<LEN;i++)
-	{
-		char * what = get_next_line(fds[i]);
-		printf("%s",what);
-		printf("%lu\n",strlen(what));
-		free(what);
+	while (1) {
+		for(int i=0;i<LEN;i++)
+		{
+			char * what = get_next_line(fds[i]);
+			if(what){
+				printf("%s",what);
+				free(what);
+			}
+		}
 	}
 }
-
