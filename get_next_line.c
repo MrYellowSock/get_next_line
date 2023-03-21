@@ -43,23 +43,17 @@ char	*get_next_line(int fd)
 	if (content_buffer == NULL)
 		content_buffer = malloc(0);
 	// newline exists in buffer : reuse them
-	next_end = ft_strchr(content_buffer, '\n');
-	if (next_end != NULL)
-	{
-		splits = ft_split_half(content_buffer, '\n');
-		free(content_buffer);
-		if (!splits)
-			return (NULL);
-		content_buffer = splits[1];
-		return (splits[0]);
-	}
-	else
+	while (ft_strchr(content_buffer, '\n') == NULL)
 	{
 		recent = get_next_string(fd);
 		expand(&content_buffer, recent);
 		if (!content_buffer)
 			return (NULL);
-		else
-			return (get_next_line(fd));
 	}
+	splits = ft_split_half(content_buffer, '\n');
+	free(content_buffer);
+	if (!splits)
+		return (NULL);
+	content_buffer = splits[1];
+	return (splits[0]);
 }
