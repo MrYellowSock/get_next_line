@@ -3,13 +3,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+//garunteed to free the target
 void	expand(char **target, char const *addition)
 {
 	char	*newone;
 
 	newone = ft_strjoin(*target, addition);
-	if (*target)
-		free(*target);
+	free(*target);
 	*target = newone;
 }
 
@@ -35,18 +35,16 @@ char	*get_next_string(int fd)
 char	*get_next_line(int fd)
 {
 	static char	*content_buffer;
-	char		*next_end;
 	char		**splits;
 	char		*recent;
 
-	//initialize
 	if (content_buffer == NULL)
 		content_buffer = malloc(0);
-	// newline exists in buffer : reuse them
-	while (ft_strchr(content_buffer, '\n') == NULL)
+	while (content_buffer != NULL && ft_strchr(content_buffer, '\n') == NULL)
 	{
 		recent = get_next_string(fd);
 		expand(&content_buffer, recent);
+		free(recent);
 		if (!content_buffer)
 			return (NULL);
 	}

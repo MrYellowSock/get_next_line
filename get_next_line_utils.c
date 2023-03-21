@@ -80,6 +80,8 @@ char	**ft_split_half(char const *s, char sep)
 	int		left_size;
 	int		right_size;
 
+	if (!s)
+		return (NULL);
 	break_point = ft_strchr(s, sep);
 	if (!break_point)
 		return (NULL);
@@ -90,9 +92,15 @@ char	**ft_split_half(char const *s, char sep)
 	right_size = ft_strlen(s) - left_size;
 	output[0] = malloc(left_size + 1);
 	output[1] = malloc(right_size + 1);
-	if (!output[0] && !output[1])
+	if (!output[0] || !output[1])
+	{
+		free(output[0]);
+		free(output[1]);
+		free(output);
 		return (NULL);
+	}
 	output[0][left_size] = 0;
+	output[1][right_size] = 0;
 	ft_memcpy(output[0], s, left_size);
 	ft_memcpy(output[1], s + left_size, right_size);
 	return (output);
