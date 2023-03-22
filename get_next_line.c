@@ -37,6 +37,7 @@ char	*get_next_line(int fd)
 	static char	*content_buffer;
 	char		**splits;
 	char		*recent;
+	char		*ret;
 
 	if (content_buffer == NULL)
 		content_buffer = malloc(0);
@@ -53,5 +54,7 @@ char	*get_next_line(int fd)
 	if (!splits)
 		return (NULL);
 	content_buffer = splits[1];
-	return (splits[0]);
+	ret = splits[0];
+	free(splits);
+	return (ret);
 }
