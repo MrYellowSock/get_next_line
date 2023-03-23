@@ -51,13 +51,9 @@ ssize_t	get_next_string(int fd, char *read_buf)
 char	*get_next_line(int fd)
 {
 	static minivec	vec = {NULL,0};
+	char * next_end ; 
 
-	mayalloc(&vec);
-	if(!vec.buffer)
-		return (NULL);
-
-	const char * next_end = ft_strchr(vec.buffer, '\n');
-	if (next_end){
+	if (vec.buffer != NULL && (next_end = ft_strchr(vec.buffer, '\n') ) != NULL){
 		size_t retsize = next_end - vec.buffer + 1;
 		char * ret = malloc(retsize + 1);
 		if(ret)
@@ -68,7 +64,10 @@ char	*get_next_line(int fd)
 		}
 		return ret;
 	}
-	else if(vec.buffer) {
+	else {
+		mayalloc(&vec);
+		if(!vec.buffer)
+			return (NULL);
 		size_t current_len = ft_strlen(vec.buffer);
 		ssize_t readsize = get_next_string(fd, vec.buffer + current_len);
 		if(readsize < 0)
