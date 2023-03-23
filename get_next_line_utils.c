@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skulkamt <skulkamt@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/23 13:33:40 by skulkamt          #+#    #+#             */
+/*   Updated: 2023/03/23 13:36:19 by skulkamt         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 #include <stddef.h>
 
@@ -9,13 +21,9 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	d = dst;
 	s = src;
 	if (src == NULL && dst == NULL && n > 0)
-	{
 		return (NULL);
-	}
 	while (n-- > 0)
-	{
 		*d++ = *s++;
-	}
 	return (dst);
 }
 
@@ -35,9 +43,10 @@ size_t	ft_strlen(const char *s)
 // this one ignore 0
 char	*ft_strchr(const char *s, int c)
 {
-	while (*s != 0) {
-		if(*s == c)
-			return (char*)s;
+	while (*s != 0)
+	{
+		if (*s == c)
+			return ((char *)s);
 		s++;
 	}
 	return (NULL);
@@ -62,7 +71,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ft_memcpy(new_str + len1, s2, len2 + 1);
 	return (new_str);
 }
-
 
 // split only the first occurence of sep
 char	**ft_split_half(char const *s, char sep)
