@@ -7,7 +7,7 @@
 
 // READ BUFFER SIZE
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 4096
+#  define BUFFER_SIZE 1
 # endif
 
 # ifndef MAX_LINE_SIZE

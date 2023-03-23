@@ -1,91 +1,89 @@
 #include "get_next_line.h"
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
 #include <unistd.h>
 
-//garunteed to free the target
-char	*expand(char *target, char const *addition)
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+typedef struct
+{
+	char			*buffer;
+	size_t			realsize;
+}  minivec;
+
+void	mayalloc(minivec *a)
 {
 	char	*newone;
+	size_t	new_size;
 
-	if (target == NULL)
-		newone = strdup(addition);
-	else
-		newone = ft_strjoin(target, addition);
-	free(target);
-	return (newone);
+	if (a->buffer == NULL || ft_strlen(a->buffer) + BUFFER_SIZE >= a->realsize)
+	{
+		new_size = MAX(a->realsize * 2, BUFFER_SIZE) + 1;
+		newone = malloc(new_size);
+		if (newone)
+		{
+			newone[0] = 0;
+			if(a->buffer)
+				memcpy(newone, a->buffer, a->realsize);
+			a->realsize = new_size;
+		}
+		else
+		{
+			a->realsize = 0;
+		}
+		free(a->buffer);
+		a->buffer = newone;
+	}
 }
 
-// a new string from fd
-// empty string if eof
-// NULL on error
-char	*get_next_string(int fd)
+ssize_t	get_next_string(int fd, char *read_buf)
 {
-	char	*read_buf;
 	ssize_t	totalRead;
 
-	read_buf = malloc(BUFFER_SIZE + 1);
-	if (!read_buf)
-		return (NULL);
 	totalRead = read(fd, read_buf, BUFFER_SIZE);
-	if (totalRead < 0)
-	{
-		free(read_buf);
-		return (NULL);
-	}
-	read_buf[totalRead] = '\0';
-	return (read_buf);
+	if (totalRead >= 0)
+		read_buf[totalRead] = '\0';
+	return (totalRead);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*content_buffer ;
-	char	**splits;
-	char	*temp;
+	static minivec	vec = {NULL,0};
 
-	if (content_buffer != NULL && ft_strchr(content_buffer, '\n'))
-	{
-		splits = ft_split_half(content_buffer, '\n');
-		free(content_buffer);
-		if (!splits)
-			return (NULL);
-		content_buffer = splits[1];
-		temp = splits[0];
-		free(splits);
-		return (temp);
-	}
-	else
-	{
-		temp = get_next_string(fd);
-		if (!temp)
-			return (NULL);
-		else if (ft_strlen(temp) == 0)
+	mayalloc(&vec);
+	if(!vec.buffer)
+		return (NULL);
+
+	const char * next_end = ft_strchr(vec.buffer, '\n');
+	if (next_end){
+		size_t retsize = next_end - vec.buffer + 1;
+		char * ret = malloc(retsize + 1);
+		if(ret)
 		{
-			free(temp);
-			if (content_buffer)
-			{
-				if(ft_strlen(content_buffer) > 0)
-				{
-					temp = strdup(content_buffer);
-				}
-				else{	temp = NULL;}
-				free(content_buffer);
-				content_buffer = NULL;
-				return (temp);
-			}
-			else
-			{
-				return (NULL);
+			memcpy(ret, vec.buffer, retsize);
+			ret[retsize] = 0;
+			memmove(vec.buffer, vec.buffer + retsize , vec.realsize - retsize);
+		}
+		return ret;
+	}
+	else if(vec.buffer) {
+		size_t current_len = ft_strlen(vec.buffer);
+		ssize_t readsize = get_next_string(fd, vec.buffer + current_len);
+		if(readsize < 0)
+			return NULL;
+		else if(readsize == 0)
+		{
+			if(current_len > 0){
+				char * ret = strdup(vec.buffer);
+				vec.buffer[0] = 0;
+				return ret;
 			}
 		}
-		else
-		{
-			content_buffer = expand(content_buffer, temp);
-			free(temp);
-			if (!content_buffer)
-				return (NULL);
-			return (get_next_line(fd));
+		else {
+			return get_next_line(fd);
 		}
 	}
+	return NULL;
 }
