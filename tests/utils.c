@@ -12,9 +12,14 @@ void test(char * str, char sep)
 int main ()
 {
 	test("abc;def", ';');
+	//ft_strchr(NULL, '\n');
+	free(NULL);
 	test("abc;;def", ';');
 	test(";abc;def", ';');
 	test(";abcdef", ';');
 	test("abcdef;", ';');
+	test("abcdef", ';');
+	test(";", ';');
+	test(";;", ';');
 	return 0;
 }

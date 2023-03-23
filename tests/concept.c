@@ -8,7 +8,7 @@ int main()
 {
 	char *str;
 	char files[LEN][30] = {
-		"file.txt"
+		"tests/file.txt"
 	};
 	int fds[LEN];
 	for(int i=0;i<LEN;i++)
@@ -30,8 +30,9 @@ int main()
 	for(int i=0;i<LEN;i++)
 	{
 		char * test = malloc(40);
-		read(fds[i], test,40);
+		int tot = read(fds[i], test,40);
 		printf("%s",test);
+		printf("read %d\n",tot);
 	}
 	for(int i=0;i<LEN;i++)
 	{
