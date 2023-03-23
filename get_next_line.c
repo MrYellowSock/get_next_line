@@ -6,7 +6,7 @@
 /*   By: skulkamt <skulkamt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 17:16:14 by skulkamt          #+#    #+#             */
-/*   Updated: 2023/03/23 18:09:57 by skulkamt         ###   ########.fr       */
+/*   Updated: 2023/03/23 18:18:16 by skulkamt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,6 @@ size_t	max(size_t a, size_t b)
 	else
 		return (b);
 }
-
-typedef struct s_vec
-{
-	char	*buff;
-	size_t	offset;
-	size_t	size;
-}					t_vec;
 
 void	mayalloc(t_vec *a)
 {
