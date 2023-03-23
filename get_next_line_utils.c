@@ -6,7 +6,7 @@
 /*   By: skulkamt <skulkamt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 17:15:47 by skulkamt          #+#    #+#             */
-/*   Updated: 2023/03/23 17:50:29 by skulkamt         ###   ########.fr       */
+/*   Updated: 2023/03/23 18:41:58 by skulkamt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,19 @@ char	*ft_strdup(const char *s1)
 	}
 	newone[n] = 0;
 	return (newone);
+}
+
+char	*ft_strcpy(char *dest, char *src)
+{
+	char	*dest_pointing;
+
+	dest_pointing = dest;
+	while (*src != 0)
+	{
+		*dest = *src;
+		src++;
+		dest++;
+	}
+	*dest = 0;
+	return (dest_pointing);
 }

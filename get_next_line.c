@@ -6,12 +6,11 @@
 /*   By: skulkamt <skulkamt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 17:16:14 by skulkamt          #+#    #+#             */
-/*   Updated: 2023/03/23 18:18:16 by skulkamt         ###   ########.fr       */
+/*   Updated: 2023/03/23 18:41:58 by skulkamt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <string.h>
 
 size_t	max(size_t a, size_t b)
 {
@@ -104,7 +103,7 @@ char	*get_next_line(int fd)
 		{
 			ft_memcpy(ret, vec.buff, retsize);
 			ret[retsize] = 0;
-			ft_memcpy(vec.buff, vec.buff + retsize, vec.size - retsize);
+			ft_strcpy(vec.buff, vec.buff + retsize);
 			vec.offset -= retsize;
 		}
 		return (ret);
