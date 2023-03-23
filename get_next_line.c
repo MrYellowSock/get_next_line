@@ -6,7 +6,7 @@
 /*   By: skulkamt <skulkamt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 17:16:14 by skulkamt          #+#    #+#             */
-/*   Updated: 2023/03/23 18:43:17 by skulkamt         ###   ########.fr       */
+/*   Updated: 2023/03/23 19:24:07 by skulkamt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,14 +75,13 @@ char	*cont(t_vec *vec, int fd)
 			vec->offset = 0;
 			return (ret);
 		}
-		else
-			return (NULL);
+		vec->size = 0;
+		free(vec->buff);
+		vec->buff = NULL;
+		return (NULL);
 	}
-	else
-	{
-		vec->offset += readsize;
-		return (get_next_line(fd));
-	}
+	vec->offset += readsize;
+	return (get_next_line(fd));
 }
 
 char	*get_next_line(int fd)
