@@ -6,7 +6,7 @@
 /*   By: skulkamt <skulkamt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 17:16:14 by skulkamt          #+#    #+#             */
-/*   Updated: 2023/03/23 18:41:58 by skulkamt         ###   ########.fr       */
+/*   Updated: 2023/03/23 18:43:17 by skulkamt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	mayalloc(t_vec *a)
 		{
 			newone[0] = 0;
 			if (a->buff)
-				ft_memcpy(newone, a->buff, a->offset + 1);
+				ft_strcpy(newone, a->buff);
 			a->size = new_size;
 		}
 		else
