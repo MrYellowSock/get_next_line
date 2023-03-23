@@ -1,91 +1,120 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skulkamt <skulkamt@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/23 17:16:14 by skulkamt          #+#    #+#             */
+/*   Updated: 2023/03/23 18:09:57 by skulkamt         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
-#include <unistd.h>
 
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
-typedef struct
+size_t	max(size_t a, size_t b)
 {
-	char			*buffer;
-	size_t			offset;
-	size_t			realsize;
-}  minivec;
+	if (a > b)
+		return (a);
+	else
+		return (b);
+}
 
-void	mayalloc(minivec *a)
+typedef struct s_vec
+{
+	char	*buff;
+	size_t	offset;
+	size_t	size;
+}					t_vec;
+
+void	mayalloc(t_vec *a)
 {
 	char	*newone;
 	size_t	new_size;
 
-	if (a->buffer == NULL || a->offset + BUFFER_SIZE >= a->realsize)
+	if (a->buff == NULL || a->offset + BUFFER_SIZE >= a->size)
 	{
-		new_size = MAX(a->realsize * 2, BUFFER_SIZE) + 1;
+		new_size = max(a->size * 2, BUFFER_SIZE) + 1;
 		newone = malloc(new_size);
 		if (newone)
 		{
 			newone[0] = 0;
-			if(a->buffer)
-				memcpy(newone, a->buffer, a->realsize);
-			a->realsize = new_size;
+			if (a->buff)
+				ft_memcpy(newone, a->buff, a->offset + 1);
+			a->size = new_size;
 		}
 		else
 		{
-			a->realsize = 0;
+			a->size = 0;
 			a->offset = 0;
 		}
-		free(a->buffer);
-		a->buffer = newone;
+		free(a->buff);
+		a->buff = newone;
 	}
 }
 
 ssize_t	get_next_string(int fd, char *read_buf)
 {
-	ssize_t	totalRead;
+	ssize_t	totalread;
 
-	totalRead = read(fd, read_buf, BUFFER_SIZE);
-	if (totalRead >= 0)
-		read_buf[totalRead] = '\0';
-	return (totalRead);
+	totalread = read(fd, read_buf, BUFFER_SIZE);
+	if (totalread >= 0)
+		read_buf[totalread] = '\0';
+	return (totalread);
+}
+
+char	*cont(t_vec *vec, int fd)
+{
+	char	*ret;
+	ssize_t	readsize;
+
+	mayalloc(vec);
+	if (!vec->buff)
+		return (NULL);
+	readsize = get_next_string(fd, vec->buff + vec->offset);
+	if (readsize < 0)
+		return (NULL);
+	else if (readsize == 0)
+	{
+		if (vec->offset > 0)
+		{
+			ret = ft_strdup(vec->buff);
+			vec->offset = 0;
+			return (ret);
+		}
+		else
+			return (NULL);
+	}
+	else
+	{
+		vec->offset += readsize;
+		return (get_next_line(fd));
+	}
 }
 
 char	*get_next_line(int fd)
 {
-	static minivec	vec = {NULL,0,0};
-	char * next_end ; 
+	static t_vec	vec;
+	char			*next_end;
+	size_t			retsize;
+	char			*ret;
 
-	if (vec.buffer != NULL && (next_end = ft_strchr(vec.buffer, '\n') ) != NULL){
-		size_t retsize = next_end - vec.buffer + 1;
-		char * ret = malloc(retsize + 1);
-		if(ret)
+	next_end = NULL;
+	if (vec.buff != NULL)
+		next_end = ft_strchr(vec.buff, '\n');
+	if (next_end != NULL)
+	{
+		retsize = next_end - vec.buff + 1;
+		ret = malloc(retsize + 1);
+		if (ret)
 		{
-			memcpy(ret, vec.buffer, retsize);
+			ft_memcpy(ret, vec.buff, retsize);
 			ret[retsize] = 0;
-			memmove(vec.buffer, vec.buffer + retsize , vec.realsize - retsize);
+			ft_memcpy(vec.buff, vec.buff + retsize, vec.size - retsize);
 			vec.offset -= retsize;
 		}
-		return ret;
+		return (ret);
 	}
-	else {
-		mayalloc(&vec);
-		if(!vec.buffer)
-			return (NULL);
-		ssize_t readsize = get_next_string(fd, vec.buffer + vec.offset);
-		if(readsize < 0)
-			return NULL;
-		else if(readsize == 0)
-		{
-			if(vec.offset > 0){
-				char * ret = strdup(vec.buffer);
-				vec.offset = 0;
-				return ret;
-			}
-		}
-		else {
-			vec.offset += readsize;
-			return get_next_line(fd);
-		}
-	}
-	return NULL;
+	return (cont(&vec, fd));
 }
