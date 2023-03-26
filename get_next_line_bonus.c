@@ -6,7 +6,7 @@
 /*   By: skulkamt <skulkamt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 23:22:31 by skulkamt          #+#    #+#             */
-/*   Updated: 2023/03/26 11:59:04 by skulkamt         ###   ########.fr       */
+/*   Updated: 2023/03/26 12:33:01 by skulkamt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ char	*get_next_line(int fd)
 	size_t			retsize;
 	t_vec			*vec;
 
-	if (fd < 0)
+	if (fd < 0 || fd > 4096)
 		return (NULL);
 	vec = &vecs[fd];
 	temp = NULL;
