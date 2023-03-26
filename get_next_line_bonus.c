@@ -6,18 +6,18 @@
 /*   By: skulkamt <skulkamt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 23:22:31 by skulkamt          #+#    #+#             */
-/*   Updated: 2023/03/23 23:22:32 by skulkamt         ###   ########.fr       */
+/*   Updated: 2023/03/26 11:59:04 by skulkamt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-size_t	max(size_t a, size_t b)
+void	purge(t_vec *vec)
 {
-	if (a > b)
-		return (a);
-	else
-		return (b);
+	free(vec->buff);
+	vec->buff = NULL;
+	vec->size = 0;
+	vec->offset = 0;
 }
 
 void	mayalloc(t_vec *a)
@@ -27,7 +27,10 @@ void	mayalloc(t_vec *a)
 
 	if (a->buff == NULL || a->offset + BUFFER_SIZE >= a->size)
 	{
-		new_size = max(a->size * 2, BUFFER_SIZE) + 1;
+		new_size = a->size * 2;
+		if (BUFFER_SIZE > new_size)
+			new_size = BUFFER_SIZE;
+		new_size = new_size + 1;
 		newone = malloc(new_size);
 		if (newone)
 		{
@@ -35,13 +38,10 @@ void	mayalloc(t_vec *a)
 			if (a->buff)
 				ft_strcpy(newone, a->buff);
 			a->size = new_size;
+			free(a->buff);
 		}
 		else
-		{
-			a->size = 0;
-			a->offset = 0;
-		}
-		free(a->buff);
+			purge(a);
 		a->buff = newone;
 	}
 }
@@ -66,7 +66,10 @@ char	*cont(t_vec *vec, int fd)
 		return (NULL);
 	readsize = get_next_string(fd, vec->buff + vec->offset);
 	if (readsize < 0)
+	{
+		purge(vec);
 		return (NULL);
+	}
 	else if (readsize == 0)
 	{
 		if (vec->offset > 0)
@@ -75,9 +78,7 @@ char	*cont(t_vec *vec, int fd)
 			vec->offset = 0;
 			return (ret);
 		}
-		vec->size = 0;
-		free(vec->buff);
-		vec->buff = NULL;
+		purge(vec);
 		return (NULL);
 	}
 	vec->offset += readsize;
