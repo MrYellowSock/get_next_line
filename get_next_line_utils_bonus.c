@@ -6,12 +6,12 @@
 /*   By: skulkamt <skulkamt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 17:15:47 by skulkamt          #+#    #+#             */
-/*   Updated: 2023/03/23 23:22:14 by skulkamt         ###   ########.fr       */
+/*   Updated: 2023/08/01 11:57:19 by skulkamt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-
+#ifndef LIBFT_H
 void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
 	char		*d;
@@ -91,3 +91,4 @@ char	*ft_strcpy(char *dest, char *src)
 	*dest = 0;
 	return (dest_pointing);
 }
+#endif
