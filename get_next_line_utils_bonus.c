@@ -6,13 +6,13 @@
 /*   By: skulkamt <skulkamt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 17:15:47 by skulkamt          #+#    #+#             */
-/*   Updated: 2023/08/01 11:57:19 by skulkamt         ###   ########.fr       */
+/*   Updated: 2023/08/02 10:33:16 by skulkamt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 #ifndef LIBFT_H
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+void	*_memcpy(void *dst, const void *src, size_t n)
 {
 	char		*d;
 	const char	*s;
@@ -30,7 +30,7 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	return (dst);
 }
 
-size_t	ft_strlen(const char *s)
+size_t	_strlen(const char *s)
 {
 	size_t	cnt;
 
@@ -44,7 +44,7 @@ size_t	ft_strlen(const char *s)
 }
 
 // this one ignore 0
-char	*ft_strchr(const char *s, int c)
+char	*_strchr(const char *s, int c)
 {
 	while (*s != 0)
 	{
@@ -55,13 +55,13 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strdup(const char *s1)
+char	*_strdup(const char *s1)
 {
 	size_t	n;
 	char	*newone;
 	size_t	i;
 
-	n = ft_strlen(s1);
+	n = _strlen(s1);
 	newone = malloc((n + 1) * sizeof(char));
 	if (newone == NULL)
 	{
@@ -77,7 +77,7 @@ char	*ft_strdup(const char *s1)
 	return (newone);
 }
 
-char	*ft_strcpy(char *dest, char *src)
+char	*_strcpy(char *dest, char *src)
 {
 	char	*dest_pointing;
 

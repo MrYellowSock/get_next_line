@@ -6,7 +6,7 @@
 /*   By: skulkamt <skulkamt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 17:16:14 by skulkamt          #+#    #+#             */
-/*   Updated: 2023/03/26 11:57:49 by skulkamt         ###   ########.fr       */
+/*   Updated: 2023/08/02 10:37:30 by skulkamt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	mayalloc(t_vec *a)
 		{
 			newone[0] = 0;
 			if (a->buff)
-				ft_strcpy(newone, a->buff);
+				_strcpy(newone, a->buff);
 			a->size = new_size;
 			free(a->buff);
 		}
@@ -75,7 +75,7 @@ char	*cont(t_vec *vec, int fd)
 	{
 		if (vec->offset > 0)
 		{
-			ret = ft_strdup(vec->buff);
+			ret = _strdup(vec->buff);
 			vec->offset = 0;
 			return (ret);
 		}
@@ -97,16 +97,16 @@ char	*get_next_line(int fd)
 		return (NULL);
 	next_end = NULL;
 	if (vec.buff != NULL)
-		next_end = ft_strchr(vec.buff, '\n');
+		next_end = _strchr(vec.buff, '\n');
 	if (next_end != NULL)
 	{
 		retsize = next_end - vec.buff + 1;
 		ret = malloc(retsize + 1);
 		if (ret)
 		{
-			ft_memcpy(ret, vec.buff, retsize);
+			_memcpy(ret, vec.buff, retsize);
 			ret[retsize] = 0;
-			ft_strcpy(vec.buff, vec.buff + retsize);
+			_strcpy(vec.buff, vec.buff + retsize);
 			vec.offset -= retsize;
 		}
 		return (ret);
